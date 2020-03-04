@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.csv.CSVRecord;
-
 import us.dontcareabout.i18nIsShit.CSV;
+import us.dontcareabout.i18nIsShit.Dictionary;
 import us.dontcareabout.i18nIsShit.Util;
 
 /**
@@ -25,30 +24,30 @@ public class JQuery extends Generator {
 	public void gen(File folder) throws IOException {
 		if (!folder.exists()) { folder.mkdir(); }
 
-		List<String> header = csv.getHeaderList();
+		List<String> keyList = getKeys();
 
-		for (int i = 1; i < header.size(); i++) {
+		for (String locale : getLocales()) {
 			Util.stringToFile(
-				genLocal(csv.getRecords(), header.get(i)),
-				new File(folder, header.get(i) + ".json")
+				gen(keyList, getDictionary(locale)),
+				new File(folder, locale + ".json")
 			);
 		}
 	}
 
-	public static String genLocal(List<CSVRecord> records, String header) throws IOException {
-		if (records.size() == 0) { return "{}"; }
+	public static String gen(List<String> keyList, Dictionary locale) {
+		if (keyList.size() == 0) { return "{}"; }
 
-		StringBuffer result = new StringBuffer("{" + tuple(records.get(0), header, ""));
-		for (int i = 1; i < records.size(); i++) {
-			result.append(tuple(records.get(i), header, ","));
+		StringBuffer result = new StringBuffer("{" + tuple(keyList.get(0), locale.get(keyList.get(0)), ""));
+		for (int i = 1; i < keyList.size(); i++) {
+			result.append(tuple(keyList.get(i), locale.get(keyList.get(i)), ","));
 		}
 		result.append("}");
 
 		return result.toString();
 	}
 
-	public static String tuple(CSVRecord record, String header, String prefix) {
-		return record.get(header).isEmpty() ? "" :
-			prefix + "\"" + record.get(0) + "\":\"" + record.get(header) + "\"";
+	public static String tuple(String key, String value, String prefix) {
+		return value == null || value.isEmpty() ? "" :
+			prefix + "\"" + key + "\":\"" + value + "\"";
 	}
 }
