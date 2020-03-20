@@ -22,9 +22,18 @@
 所以要直接餵給它一個 CSV 的檔案、或是一個 `java.io.Reader` 也是可以的。
 
 
+語系檔撰寫格式
+==============
+
+[GWT]（Java `MessageFormat`）。
+
+[jQuery.i18n] 的 placeholder `$1`，在 [GWT] 當中得寫成 `{0}`。
+
+
 支援的 output 格式
 ==================
 
+* [GWT]
 * [jQuery.i18n]
 
 亦可 extends `us.dontcareabout.i18nIsShit.generator.Generator` 自行實作。
@@ -43,4 +52,5 @@ new JQuery(url).gen(folder);
 ```
 
 
+[GWT]: http://www.gwtproject.org/doc/latest/DevGuideI18nMessages.html
 [jQuery.i18n]: https://github.com/wikimedia/jquery.i18n
