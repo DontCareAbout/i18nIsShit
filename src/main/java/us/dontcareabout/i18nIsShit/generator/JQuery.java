@@ -22,7 +22,7 @@ public class JQuery extends Generator {
 
 	@Override
 	public void gen(File folder) throws IOException {
-		if (!folder.exists()) { folder.mkdir(); }
+		if (!folder.exists()) { folder.mkdirs(); }
 
 		List<String> keyList = getKeys();
 
