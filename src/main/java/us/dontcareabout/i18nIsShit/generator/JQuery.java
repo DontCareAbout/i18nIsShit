@@ -14,6 +14,8 @@ import us.dontcareabout.i18nIsShit.Util;
  * 輸出格式為：每個語系（header）獨立一個 JSON 檔，檔名為對應的 header 名。
  */
 public class JQuery extends Generator {
+	private static final int MAX_PLACEHOLDER = 10;
+
 	public JQuery(String url) throws IOException { super(url); }
 
 	public JQuery(File file) throws IOException { super(file); }
@@ -22,7 +24,7 @@ public class JQuery extends Generator {
 
 	@Override
 	public void gen(File folder) throws IOException {
-		if (!folder.exists()) { folder.mkdir(); }
+		if (!folder.exists()) { folder.mkdirs(); }
 
 		List<String> keyList = getKeys();
 
@@ -48,6 +50,22 @@ public class JQuery extends Generator {
 
 	public static String tuple(String key, String value, String prefix) {
 		return value == null || value.isEmpty() ? "" :
-			prefix + "\"" + key + "\":\"" + value + "\"";
+			prefix + "\"" + key + "\":\"" + correct(value) + "\"";
+	}
+
+	/**
+	 * 將 GWT / Java 的 placeholder 格式改為 jQuery 的格式
+	 */
+	public static String correct(String value) {
+		//為了方便快速起見，這裡直接用暴力解
+		//賭 placehoder 不會超過 10 個...... lol
+		for (int i = 0; i < MAX_PLACEHOLDER; i++) {
+			String placeholder = "{" + i + "}";
+			int index = value.indexOf(placeholder);
+			if (index == -1) { break; }
+			value = value.replace(placeholder, "$" + (i + 1));
+		}
+
+		return value;
 	}
 }
